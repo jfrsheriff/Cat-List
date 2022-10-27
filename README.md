@@ -11,4 +11,5 @@ Following are the Highlights of the app ,
 * On Click of Specific Cat Breed user is redirected to Wikipedia page of the selected Cat Breed
 * Error are handled graciously
 * No thirdParty is Used
-* Code is Completely testable since it is written by strictly following SOLID principles 
+* Code is Completely testable since it is written by strictly following SOLID design principles
+* Every Module is Scalable & easily replacable since protocol Oriented programming is extensively used along with good software design principles
