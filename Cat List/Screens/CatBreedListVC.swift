@@ -46,6 +46,7 @@ final class CatBreedListVC: UIViewController {
         let searchController = UISearchController()
         searchController.searchResultsUpdater = self
         searchController.searchBar.placeholder = StringConstants.catBreedListSearchBarPlaceHolder
+        searchController.searchBar.isHidden = true
         navigationItem.searchController = searchController
     }
     
@@ -86,6 +87,15 @@ final class CatBreedListVC: UIViewController {
         }
     }
     
+    private func hideSearchBarInMainThread() {
+        DispatchQueue.main.async {self.navigationItem.searchController?.searchBar.isHidden = true}
+    }
+    
+    
+    private func unHideSearchBarInMainThread() {
+        DispatchQueue.main.async {self.navigationItem.searchController?.searchBar.isHidden = false}
+    }
+    
 }
 
 extension CatBreedListVC : UISearchResultsUpdating, UICollectionViewDelegate{
@@ -107,22 +117,17 @@ extension CatBreedListVC : CatBreedViewProtocol{
     
     func updateUI(with listModel: [ListModel]) {
         hideLoading()
+        unHideSearchBarInMainThread()
         refreshData(listModel)
     }
     
     
     func showError(title: String, message: String, buttonText: String) {
         hideLoading()
+        hideSearchBarInMainThread()
         presentAlertOnMainThread(title: title, message: message, buttonTitle: buttonText)
-        updateUIForError()
         showErrorMessage(title: title, message: message, buttonText: buttonText,delegate: self)
     }
-    
-    
-    func updateUIForError(){
-        DispatchQueue.main.async {self.navigationItem.searchController?.searchBar.isHidden = true}
-    }
-    
     
     
     func presentSafariVC(for url: URL) {
@@ -133,7 +138,6 @@ extension CatBreedListVC : CatBreedViewProtocol{
 
 extension CatBreedListVC : ErrorViewDelegate{
     func reload() {
-        self.navigationItem.searchController?.searchBar.isHidden = false
         hideErrorMessage()
         fetchCatBreeds()
     }
